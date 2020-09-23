@@ -2,17 +2,21 @@ const express = require('express');
 const morgan = require('morgan')
 const nunjucks = require('nunjucks');
 const app = express();
+const bodyParser = require('body-parser')
+const routes = require('./routes');
+const socketio = require('socket.io')
 
-
-const tweetsDeEjemplo = [
-    { id: 1, name: "juan", content: "este es un tweeettt de juan" },
-    { id: 2, name: "carlos", content: "este es un tweeettt de carlos" },
-    { id: 3, name: "pepe", content: "este es un tweeettt de pepe" },
-];
+let server = app.listen(5000, function () {
+    console.log('Servidor corriendo en el puerto 3000')
+});
+let io = socketio.listen(server)
 
 app.use(morgan('tiny'))
 app.use(express.static('./public'))
 app.set('view engine', 'html')
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.use('/', routes(io));
 app.engine('html', nunjucks.render);
 nunjucks.configure('views');
 
@@ -21,9 +25,6 @@ nunjucks.configure('views');
 //     res.render('index', { title: 'Hall of Fame', personas: data });
 // });
 
-app.get("/", (req, res) => {
-    res.render('index', { tweets: tweetsDeEjemplo });
-})
-app.listen(5000, function () {
-    console.log('Servidor corriendo en el puerto 3000')
-});
+
+
+

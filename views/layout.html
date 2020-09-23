@@ -81,7 +81,37 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Cargá la librería socket.io arriba, luego conectalo al servidor.
+        // Porque el servidor socket.io esta siendo corrido en el mismo servidor
+        // que tu instancia de Express, podes connect() sin ningún argumento.  
+        var socket = io.connect();
+        socket.on('connect', function () {
+            console.log('conectado al servidor via WebSockets!');
+        });
+        // Cuando el evento 'new_tweet' es disparado, hacé algo con el tweet enviado.
+        socket.on('newTweet', function (tweet) {
+            console.log(tweet);
+            //alert('Actualizando... fijate en la consola...');
+            // Alguna lógica para agregar el tweet al DOM
+            let tweetContainer = document.getElementById("tweets")
+            let a = document.createElement('a')
+            a.href = `/users/${tweet.name}`
+            a.text = `${tweet.name}`
+            let h4 = document.createElement("h4")
+            h4.append(a)
+            tweetContainer.append(h4)
 
+            let p = document.createElement('p')
+            let a2 = document.createElement('a')
+            a2.href = `/tweets/${tweet.id}`
+            a2.text = `${tweet.tweet}`
+            p.append(a2)
+            tweetContainer.append(p)
+            //tweetContainer.
+        }); 
+    </script>
 </body>
 
 </html>
